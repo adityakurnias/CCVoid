@@ -24,7 +24,7 @@ reindexes, and regenerates `packages.js` for the web page.
 Local checkout on the machine:
 
 ```sh
-echo "repository=https://codeberg.org/adityakurnias/CCVoid/raw/branch/binpkgs" | sudo tee /etc/xbps.d/ccvoid.conf
+echo "repository=https://repo.kurnia.me" | sudo tee /etc/xbps.d/ccvoid.conf
 sudo xbps-install -Sy
 sudo xbps-install zed-editor
 ```

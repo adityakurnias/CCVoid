@@ -1,4 +1,4 @@
 repo-key.pem
 void-packages
-/repo/binpkgs/
+repo/binpkgs/
 codeberg

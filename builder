@@ -34,7 +34,7 @@ else
     (
         cd "$VOID_PACKAGES"
         git sparse-checkout init --cone
-        git sparse-checkout set common etc "srcpkgs/$PKG_TO_BUILD"
+        git sparse-checkout set common etc srcpkgs/base-files srcpkgs/xbps "srcpkgs/$PKG_TO_BUILD"
         git checkout -q
     )
 fi
@@ -57,7 +57,10 @@ info "Building '$PKG_TO_BUILD'..."
 info "Preparing repository at $REPO_DIR..."
 mkdir -p "$REPO_DIR"
 
-info "Copying .xbps package to repository..."
+info "Cleaning up old versions of '$PKG_TO_BUILD'..."
+find "$REPO_DIR" -maxdepth 1 -name "${PKG_TO_BUILD}-*.xbps*" -type f -delete
+
+info "Copying new .xbps package to repository..."
 cp "$VOID_PACKAGES/hostdir/binpkgs/${PKG_TO_BUILD}"*.xbps "$REPO_DIR/"
 
 # 5. Sign and reindex repository
@@ -93,6 +96,6 @@ val() { sed -n "s/^$1=\"\(.*\)\"\$/\1/p" "$2" | head -1 | tr -d '"'; }
         sep=,
     done
     printf '\n];\n'
-} > packages.js
+} > "packages.js"
 
 info "✅ DONE! Package ready at: $REPO_DIR"
