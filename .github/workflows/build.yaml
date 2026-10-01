@@ -55,14 +55,12 @@ jobs:
       - name: Build packages
         if: steps.pkgs.outputs.list != ''
         run: |
-          export XBPS_ALLOW_ROOT=1
-          
           mkdir -p /tmp/codeberg-binpkgs
           
           for pkg in ${{ steps.pkgs.outputs.list }}; do
             echo ">>> Building $pkg..."
             
-            ./builder "$pkg"
+            XBPS_ALLOW_ROOT=1 ./builder "$pkg"
             
             cp void-packages/hostdir/binpkgs/${pkg}*.xbps /tmp/codeberg-binpkgs/ || {
               echo "Failed to find .xbps for $pkg"
