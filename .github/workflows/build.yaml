@@ -53,16 +53,25 @@ jobs:
             exit 0
           fi
       
+      - name: Create non-root user for building
+        run: |
+          useradd -m -s /bin/bash builder
+          # Berikan permission ke workspace agar user builder bisa akses
+          chown -R builder:builder "$GITHUB_WORKSPACE"
+
       - name: Build packages
         if: steps.pkgs.outputs.list != ''
         run: |
           rm -rf /tmp/codeberg-binpkgs
           mkdir -p /tmp/codeberg-binpkgs
+          chown -R builder:builder /tmp/codeberg-binpkgs
           
           for pkg in ${{ steps.pkgs.outputs.list }}; do
             echo ">>> Building $pkg..."
-            ./builder "$pkg"
             
+            su - builder -c "cd $GITHUB_WORKSPACE && ./builder '$pkg'"
+            
+            # Copy hasil build (tetap perlu root untuk copy dari hostdir)
             cp void-packages/hostdir/binpkgs/${pkg}*.xbps /tmp/codeberg-binpkgs/ || {
               echo "Failed to find .xbps for $pkg"
               exit 1
