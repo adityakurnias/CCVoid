@@ -16,12 +16,14 @@ env:
   SIGNED_BY: "Kurnias <adityakurnia@proton.me>"
   CODEBERG_REPO: https://codeberg.org/adityakurnias/CCVoid.git
   CODEBERG_BRANCH: binpkgs
+  XBPS_ALLOW_ROOT: 1 
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/void-linux/void-glibc-full:latest
+      options: --cap-add=SYS_ADMIN --cap-add=MKNOD --cap-add=SETGID --cap-add=SETUID
 
     steps:
       - name: Checkout source
@@ -50,21 +52,16 @@ jobs:
             echo "No package templates changed. Skipping build."
             exit 0
           fi
-      
-      - name: Create non-root builder user & fix permissions
-        run: |
-          useradd -m -s /bin/bash builder
-          chown -R builder:builder "$GITHUB_WORKSPACE"
-          mkdir -p /tmp/codeberg-binpkgs
-          chown -R builder:builder /tmp/codeberg-binpkgs
 
       - name: Build packages
         if: steps.pkgs.outputs.list != ''
         run: |
+          mkdir -p /tmp/codeberg-binpkgs
+          
           for pkg in ${{ steps.pkgs.outputs.list }}; do
             echo ">>> Building $pkg..."
             
-            su - builder -c "cd $GITHUB_WORKSPACE && ./builder $pkg"
+            ./builder "$pkg"
             
             cp void-packages/hostdir/binpkgs/${pkg}*.xbps /tmp/codeberg-binpkgs/ || {
               echo "Failed to find .xbps for $pkg"
