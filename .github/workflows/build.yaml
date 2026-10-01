@@ -16,7 +16,6 @@ env:
   SIGNED_BY: "Kurnias <adityakurnia@proton.me>"
   CODEBERG_REPO: https://codeberg.org/adityakurnias/CCVoid.git
   CODEBERG_BRANCH: binpkgs
-  XBPS_ALLOW_ROOT: 1 
 
 jobs:
   build:
@@ -56,6 +55,8 @@ jobs:
       - name: Build packages
         if: steps.pkgs.outputs.list != ''
         run: |
+          export XBPS_ALLOW_ROOT=1
+          
           mkdir -p /tmp/codeberg-binpkgs
           
           for pkg in ${{ steps.pkgs.outputs.list }}; do
@@ -101,7 +102,7 @@ jobs:
           if ! git diff --cached --exit-code >/dev/null; then
             git commit -m "[ci] update binaries: ${{ steps.pkgs.outputs.list }}"
             git push origin $CODEBERG_BRANCH
-            echo "Binaries pushed to Codeberg!"
+            echo "✅ Binaries pushed to Codeberg!"
           else
-            echo "No binary changes detected. Skipping push."
+            echo "ℹ️ No binary changes detected. Skipping push."
           fi
