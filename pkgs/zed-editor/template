@@ -1,0 +1,47 @@
+# Template file for 'zed-editor'
+pkgname=zed-editor
+version=1.21.0
+revision=1
+archs="x86_64"
+build_style=fetch
+hostmakedepends="bsdtar"
+short_desc="High-performance, multiplayer code editor."
+maintainer="Kurnias <adityakurnia@proton.me>"
+license="GPL-3.0-or-later"
+homepage="https://zed.dev"
+distfiles="https://github.com/zed-industries/zed/releases/download/v${version}/zed-linux-x86_64.tar.gz"
+checksum=b79a992e960ed4067cb2b50d66789ed8618eeb1780ed6a0f8f1e71dd80f74200
+
+depends="wayland libxkbcommon vulkan-loader mesa libGL"
+nostrip=yes
+noshlibprovides=yes
+nopie=yes
+
+do_install() {
+    install -dm755 "${DESTDIR}/opt/zed" \
+                   "${DESTDIR}/usr/bin" \
+                   "${DESTDIR}/usr/share/applications" \
+                   "${DESTDIR}/usr/share/icons/hicolor/512x512/apps" \
+                   "${DESTDIR}/usr/share/licenses/${pkgname}"
+
+    bsdtar -xzf "${XBPS_SRCDISTDIR}/${pkgname}-${version}/zed-linux-x86_64.tar.gz" \
+        -C "${DESTDIR}/opt/zed" --strip-components=1
+
+    ln -sf /opt/zed/bin/zed "${DESTDIR}/usr/bin/zed"
+
+    if ls "${DESTDIR}/opt/zed/share/applications/"*.desktop 1> /dev/null 2>&1; then
+        cp "${DESTDIR}/opt/zed/share/applications/"*.desktop "${DESTDIR}/usr/share/applications/zed.desktop"
+        sed -i 's|Exec=.*|Exec=zed %F|g' "${DESTDIR}/usr/share/applications/zed.desktop"
+        sed -i 's|Icon=.*|Icon=zed|g' "${DESTDIR}/usr/share/applications/zed.desktop"
+    fi
+
+    if [ -f "${DESTDIR}/opt/zed/share/icons/hicolor/512x512/apps/zed.png" ]; then
+        cp "${DESTDIR}/opt/zed/share/icons/hicolor/512x512/apps/zed.png" "${DESTDIR}/usr/share/icons/hicolor/512x512/apps/zed.png"
+    fi
+
+    if [ -f "${DESTDIR}/opt/zed/licenses.md" ]; then
+        cp "${DESTDIR}/opt/zed/licenses.md" "${DESTDIR}/usr/share/licenses/${pkgname}/LICENSE"
+    fi
+
+    chmod 755 "${DESTDIR}/opt/zed/bin/zed"
+}

@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CCVoid packages</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --fg: #16181d;
+      --muted: #6b7280;
+      --card: #fff;
+      --line: #e3e5e8;
+      --accent: #2563eb;
+      --badge-bg: #eef2ff;
+      --badge-fg: #4338ca;
+      --term-bg: #101216;
+      --term-fg: #d7dae0;
+      --term-dim: #7d8590;
+      --term-cmd: #7ee787;
+      --term-str: #a5d6ff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0e1013;
+        --fg: #e6e8ea;
+        --muted: #9aa1ab;
+        --card: #16191d;
+        --line: #262a30;
+        --accent: #60a5fa;
+        --badge-bg: #17233a;
+        --badge-fg: #93c5fd;
+        --term-bg: #0a0b0d;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 15px/1.55 system-ui, -apple-system, sans-serif;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    header {
+      background: #131518;
+      color: #eceef0;
+      padding: .8rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .term {
+      background: var(--term-bg);
+      color: var(--term-fg);
+      border-radius: .5rem;
+      padding: .9rem 1.1rem;
+      font: 13px/1.8 ui-monospace, monospace;
+      overflow-x: auto;
+      box-shadow: 0 2px 10px rgb(0 0 0 / .15);
+    }
+
+    .term .cmd {
+      color: var(--term-cmd);
+    }
+
+    .term .str {
+      color: var(--term-str);
+    }
+
+    .term .c {
+      color: var(--term-dim);
+    }
+
+    /* Stats & Filter Row */
+    .stats-row {
+      display: flex;
+      gap: 1rem;
+      margin: 1.4rem 0;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: .6rem;
+      padding: .7rem 1.1rem;
+      min-width: 9rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .stat .t {
+      color: var(--muted);
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .stat .v {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .stat .v small {
+      font-size: .8rem;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--badge-bg);
+      color: var(--badge-fg);
+      border-radius: 999px;
+      padding: .05rem .5rem;
+      font-size: .72rem;
+      font-weight: 600;
+      vertical-align: middle;
+    }
+
+    /* Wide Search Input */
+    .search-box {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: .6rem;
+      padding: .7rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 200px;
+    }
+
+    .search-box label {
+      font-size: .78rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: .3rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--bg);
+      border: none;
+      color: var(--fg);
+      font-size: 1rem;
+      padding: 0.5em;
+      outline: none;
+      border-radius: 8px;
+    }
+
+    .search-box input:focus {
+      outline: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.4rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: .6rem;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: .6rem .8rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+    }
+
+    tbody tr:nth-child(even) {
+      background: color-mix(in srgb, var(--line) 25%, transparent);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    td .pname {
+      font-weight: 600;
+    }
+
+    td.mono {
+      font-family: ui-monospace, monospace;
+      font-size: .88rem;
+    }
+
+    .count {
+      margin-top: .7rem;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding: 1rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: .78rem;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 700px) {
+      .hide-sm {
+        display: none;
+      }
+
+      .stats-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="#" style="font-weight:700;font-size:1.15rem;">CCVoid</a href="#">
+    <span style="color:#9aa1ab;font-size:.85rem;margin-left:.5rem;">custom XBPS repository</span>
+    <div style="flex:1"></div>
+    <a href="https://github.com/adityakurnias/CCVoid" style="color:#cfd4da;font-size:.85rem;">GitHub</a>
+  </header>
+
+  <main>
+    <div class="term">
+      <div><span class="c"># Add this repository to your Void Linux system</span></div>
+      <div><span class="cmd">echo</span> <span class="str">"repository=https://adityakurnias.github.io/CCVoid/"</span> |
+        <span class="cmd">sudo tee</span> /etc/xbps.d/ccvoid.conf</div>
+      <div><span class="cmd">sudo xbps-install</span> -Sy</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="t">Packages</div>
+        <div class="v" id="st-total">0</div>
+      </div>
+      <div class="stat">
+        <div class="t">Architecture</div>
+        <div class="v" style="font-size:1rem;padding-top:.35rem;"><span class="badge">x86_64</span></div>
+      </div>
+
+      <div class="search-box">
+        <label for="q">Search Packages</label>
+        <input type="text" id="q" placeholder="Type package name..." autocomplete="off">
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Version</th>
+          <th class="hide-sm">License</th>
+          <th class="hide-sm">Homepage</th>
+          <th class="hide-sm">Description</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="count" id="count"></div>
+  </main>
+
+  <footer>Not officially affiliated with Void Linux.</footer>
+
+  <script src="packages.js"></script>
+  <script>
+    const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    document.getElementById("st-total").textContent = PACKAGES.length;
+
+    function render() {
+      const query = document.getElementById("q").value.toLowerCase();
+      const filtered = PACKAGES.filter(p => p.name.toLowerCase().includes(query));
+
+      document.getElementById("rows").innerHTML = filtered.length ? filtered.map(p => `
+        <tr>
+          <td><span class="pname">${esc(p.name)}</span></td>
+          <td class="mono">${esc(p.version)}</td>
+          <td class="hide-sm">${esc(p.license || "—")}</td>
+          <td class="hide-sm">${p.homepage ? `<a href="${esc(p.homepage)}" target="_blank" rel="noopener">${esc(p.homepage)}</a>` : "—"}</td>
+          <td class="hide-sm">${esc(p.desc || "")}</td>
+        </tr>`).join("") : `<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted)">No packages found.</td></tr>`;
+
+      document.getElementById("count").textContent = `${filtered.length} package${filtered.length !== 1 ? 's' : ''}`;
+    }
+
+    document.getElementById("q").addEventListener("input", render);
+    render();
+  </script>
+</body>
+
+</html>
