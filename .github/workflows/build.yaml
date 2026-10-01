@@ -27,11 +27,9 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
         
-      # PERBAIKAN 1: Install dependencies DULU sebelum menggunakan git
       - name: Install dependencies
         run: xbps-install -Sy git curl xtools bsdtar
       
-      # PERBAIKAN 2: Safe directory SETELAH git terinstall
       - name: Fix git safe directory
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
@@ -57,6 +55,7 @@ jobs:
         run: |
           useradd -m -s /bin/bash builder
           chown -R builder:builder "$GITHUB_WORKSPACE"
+          mkdir -p /tmp/codeberg-binpkgs
           chown -R builder:builder /tmp/codeberg-binpkgs
 
       - name: Build packages
@@ -65,10 +64,8 @@ jobs:
           for pkg in ${{ steps.pkgs.outputs.list }}; do
             echo ">>> Building $pkg..."
             
-            # Jalankan builder sebagai user 'builder'
-            su - builder -c "cd $GITHUB_WORKSPACE && ./builder '$pkg'"
+            su - builder -c "cd $GITHUB_WORKSPACE && ./builder $pkg"
             
-            # Copy hasil build (tetap sebagai root)
             cp void-packages/hostdir/binpkgs/${pkg}*.xbps /tmp/codeberg-binpkgs/ || {
               echo "Failed to find .xbps for $pkg"
               exit 1
