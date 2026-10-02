@@ -1,7 +1,7 @@
 const PACKAGES = [
   {
     name: "polymc",
-    version: "8.0_1",
+    version: "8.0_2",
     arch: "x86_64",
     license: "GPL-3.0-only, Apache-2.0",
     homepage: "https://polymc.org",

@@ -1,7 +1,7 @@
 # Template file for 'polymc'
 pkgname=polymc
 version=8.0
-revision=1
+revision=2
 archs="x86_64"
 build_style=cmake
 configure_args="-DLauncher_QT_VERSION_MAJOR=6
@@ -14,7 +14,7 @@ hostmakedepends="extra-cmake-modules openjdk17 pkg-config qt6-tools scdoc"
 makedepends="qt6-base-devel qt6-svg-devel qt6-networkauth-devel
  qt6-charts-devel qt6-qt5compat-devel zlib-devel quazip-qt6-devel
  tomlplusplus-devel libarchive-devel qrencode-devel"
-depends="virtual?java-runtime qt6-svg qt6-imageformats
+depends="virtual?java-runtime qt6-svg qt6-imageformats qt6-wayland
  qt6-plugin-tls-openssl hicolor-icon-theme desktop-file-utils"
 short_desc="Open source Minecraft launcher with support for multiple instances"
 maintainer="Kurnias <adityakurnia@proton.me>"

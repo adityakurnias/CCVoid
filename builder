@@ -38,9 +38,9 @@ while [ "$#" -gt 0 ]; do
         -b|--bootstrap)   BOOTSTRAP=1 ;;
         -B|--rebootstrap) BOOTSTRAP=2 ;;
         -h|--help)        usage; exit 0 ;;
-        -*)               usage >&2; error "Opsi tidak dikenal: $1" ;;
+        -*)               usage >&2; error "Unknown option: $1" ;;  
         *)
-            [ -z "$PKG_TO_BUILD" ] || error "Hanya boleh satu nama paket"
+            [ -z "$PKG_TO_BUILD" ] || error "Only one package name is allowed"
             PKG_TO_BUILD="$1"
             ;;
     esac
@@ -60,6 +60,7 @@ if [ -d "$VOID_PACKAGES" ]; then
         git fetch -q --depth 1 origin HEAD
         git reset -q --hard FETCH_HEAD
         git clean -fdq
+        git sparse-checkout add srcpkgs/xbps-triggers
     )
 else
     info "Cloning void-packages..."
@@ -67,9 +68,14 @@ else
     (
         cd "$VOID_PACKAGES"
         git sparse-checkout init --cone
-        git sparse-checkout set common etc srcpkgs/base-files srcpkgs/xbps ${PKG_TO_BUILD:+"srcpkgs/$PKG_TO_BUILD"}
+        git sparse-checkout set common etc srcpkgs/base-files srcpkgs/xbps srcpkgs/xbps-triggers ${PKG_TO_BUILD:+"srcpkgs/$PKG_TO_BUILD"}
         git checkout -q
     )
+fi
+
+if [ -f ./etc/conf ]; then
+    info "Installing custom xbps-src config..."
+    cp ./etc/conf "$VOID_PACKAGES/etc/conf"
 fi
 
 # 2. Bootstrap masterdir
@@ -104,6 +110,10 @@ cp -r "$PKGS_DIR/$PKG_TO_BUILD" "$DEST"
 # 4. Build the package
 info "Cleaning previous build state..."
 "$VOID_PACKAGES/xbps-src" clean "$PKG_TO_BUILD"
+
+info "Removing old built versions of '$PKG_TO_BUILD' from hostdir..."
+find "$VOID_PACKAGES/hostdir/binpkgs" -maxdepth 1 \
+    -name "${PKG_TO_BUILD}-[0-9]*.xbps*" -type f -delete
 
 info "Building '$PKG_TO_BUILD'..."
 "$VOID_PACKAGES/xbps-src" pkg "$PKG_TO_BUILD"
