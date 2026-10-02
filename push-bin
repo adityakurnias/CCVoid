@@ -1,0 +1,31 @@
+#!/bin/sh
+# Push semua biner ke Cloudflare R2
+
+set -e
+
+: "${R2_REMOTE:=r2:ccvoid}"
+
+cd "$(dirname "$0")"
+
+if ! ls repo/binpkgs/*.xbps 1> /dev/null 2>&1; then
+    echo "❌ Error: File .xbps tidak ditemukan!"
+    exit 1
+fi
+
+echo ">>> Upload pkgs..."
+rclone copy repo/binpkgs "$R2_REMOTE" \
+    --include "*.xbps" --include "*.xbps.sig2" --progress
+
+echo ">>> Upload repodata..."
+rclone copy repo/binpkgs "$R2_REMOTE" \
+    --include "*repodata*" --progress
+
+echo ">>> Upload page"
+rclone copyto index.html "$R2_REMOTE/index.html"
+[ -f packages.js ] && rclone copyto packages.js "$R2_REMOTE/packages.js"
+
+echo ">>> Delete old pkgs..."
+rclone sync repo/binpkgs "$R2_REMOTE" \
+    --exclude ".git/**" --delete-after
+
+echo "✅ BERHASIL! Semua paket tersedia di R2."
