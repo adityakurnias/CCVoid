@@ -1,0 +1,58 @@
+# Template file for 'fresh-editor'
+pkgname=fresh-editor
+version=0.5.2
+revision=2
+archs="x86_64"
+hostmakedepends="bsdtar"
+depends="hicolor-icon-theme desktop-file-utils"
+short_desc="Terminal-based text editor with a modern UI"
+maintainer="Kurnias <adityakurnia@proton.me>"
+license="GPL-3.0"
+homepage="https://github.com/sinelaw/fresh"
+
+distfiles="https://github.com/sinelaw/fresh/releases/download/v${version}/fresh-editor-${version}-x86_64.AppImage"
+checksum=6c8fc58ec96e94988da936a1f9fe826c835958ff2ab7100592c92f91bb91c0ee
+
+nostrip=yes
+nopie=yes
+noshlibprovides=yes
+
+do_extract() {
+    mkdir -p "$wrksrc"
+    
+    cp "${XBPS_SRCDISTDIR}/${pkgname}-${version}/${distfiles##*/}" "$wrksrc/fresh.AppImage"
+    chmod +x "$wrksrc/fresh.AppImage"
+    
+    cd "$wrksrc"
+    ./fresh.AppImage --appimage-extract >/dev/null 2>&1
+    
+    mv squashfs-root/* .
+    rm -rf fresh.AppImage squashfs-root
+}
+
+do_install() {
+    local appdir="usr/lib/fresh-editor"
+    
+    vmkdir "${appdir}"
+    vmkdir usr/bin
+    vmkdir usr/share/applications
+    vmkdir usr/share/icons/hicolor/256x256/apps
+
+    cp -a "$wrksrc/"* "${DESTDIR}/${appdir}/"
+
+    if [ -f "${DESTDIR}/${appdir}/usr/bin/fresh" ]; then
+        ln -sfr "${DESTDIR}/${appdir}/usr/bin/fresh" "${DESTDIR}/usr/bin/fresh"
+    fi
+
+    if ls "${DESTDIR}/${appdir}/usr/share/applications/"*.desktop 1> /dev/null 2>&1; then
+        cp "${DESTDIR}/${appdir}/usr/share/applications/"*.desktop "${DESTDIR}/usr/share/applications/fresh-editor.desktop"
+        sed -i 's|Exec=.*|Exec=fresh %F|g' "${DESTDIR}/usr/share/applications/fresh-editor.desktop"
+        sed -i 's|Icon=.*|Icon=fresh|g' "${DESTDIR}/usr/share/applications/fresh-editor.desktop"
+    fi
+
+    if [ -d "${DESTDIR}/${appdir}/usr/share/icons" ]; then
+        cp -a "${DESTDIR}/${appdir}/usr/share/icons/"* "${DESTDIR}/usr/share/icons/"
+    fi
+    
+    rm -rf "${DESTDIR}/${appdir}/usr/share"
+}
