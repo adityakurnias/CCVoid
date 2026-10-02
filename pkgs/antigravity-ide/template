@@ -1,0 +1,37 @@
+# Template file for 'antigravity-ide'
+pkgname=antigravity-ide
+version=2.5.5
+_build=4923483625488384
+revision=1
+archs="x86_64"
+create_wrksrc=yes
+depends="gtk+3 nss alsa-lib libXScrnSaver libxkbfile libsecret
+ xdg-utils at-spi2-core libnotify libdrm"
+short_desc="Google Antigravity agentic IDE"
+maintainer="Kurnias <adityakurnia@proton.me>"
+license="custom:Proprietary"
+homepage="https://antigravity.google"
+restricted=yes
+nostrip=yes
+noverifyrdeps=yes
+distfiles="https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/${version}-${_build}/linux-x64/Antigravity%20IDE.tar.gz>antigravity-ide-${version}.tar.gz"
+checksum=0c5233b297d2b3aebb61af49f8944012c2953d361a5ebb16978490636917f831
+
+do_install() {
+	local _src="${wrksrc}/Antigravity IDE"
+	[ -d "$_src" ] || _src="${wrksrc}"
+
+	vmkdir usr/lib/antigravity-ide
+	cp -a "${_src}/." "${DESTDIR}/usr/lib/antigravity-ide/"
+
+	if [ -f "${DESTDIR}/usr/lib/antigravity-ide/chrome-sandbox" ]; then
+		chmod 4755 "${DESTDIR}/usr/lib/antigravity-ide/chrome-sandbox"
+	fi
+
+	vmkdir usr/bin
+	ln -sf ../lib/antigravity-ide/antigravity-ide "${DESTDIR}/usr/bin/antigravity-ide"
+
+	vinstall "${_src}/resources/app/resources/linux/code.png" 644 \
+		usr/share/icons/hicolor/512x512/apps antigravity-ide.png
+	vinstall "${FILESDIR}/antigravity-ide.desktop" 644 usr/share/applications
+}
