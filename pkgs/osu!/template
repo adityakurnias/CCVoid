@@ -1,0 +1,40 @@
+# Template file for 'osu-lazer'
+pkgname=osu!
+version=2026.921.0
+revision=1
+archs="x86_64"
+create_wrksrc=yes
+skip_extraction="osu-${version}.AppImage"
+nostrip=yes
+noverifyrdeps=yes
+depends="libstdc++ icu openssl libglvnd alsa-lib libpulseaudio
+ libX11 libXext libxkbcommon wayland eudev-libudev libdrm"
+short_desc="Free-to-win rhythm game (osu!lazer)"
+maintainer="Kurnias <adityakurnia@proton.me>"
+license="MIT, custom:CC-BY-NC-4.0"
+homepage="https://osu.ppy.sh"
+distfiles="https://github.com/ppy/osu/releases/download/${version}-lazer/osu.AppImage>osu-${version}.AppImage"
+checksum=dced9463b501009c95dbed891abd2f0acc2efb84ee4336f5b1cc3b7c04a5fc7d
+
+do_extract() {
+	mkdir -p "${wrksrc}"
+	cp "${XBPS_SRCDISTDIR}/${pkgname}-${version}/osu-${version}.AppImage" \
+		"${wrksrc}/osu.AppImage"
+	chmod +x "${wrksrc}/osu.AppImage"
+	cd "${wrksrc}"
+	./osu.AppImage --appimage-extract >/dev/null
+}
+
+do_install() {
+	vmkdir usr/lib/osu-lazer
+	cp -a squashfs-root/usr/bin/. "${DESTDIR}/usr/lib/osu-lazer/"
+
+	vmkdir usr/bin
+	ln -sf '../lib/osu-lazer/osu!' "${DESTDIR}/usr/bin/osu"
+
+	vmkdir usr/share/icons
+	cp -a squashfs-root/usr/share/icons/hicolor "${DESTDIR}/usr/share/icons/"
+
+	sed 's|^Exec=.*|Exec=osu %u|' 'squashfs-root/osu!.desktop' > osu-lazer.desktop
+	vinstall osu-lazer.desktop 644 usr/share/applications
+}
