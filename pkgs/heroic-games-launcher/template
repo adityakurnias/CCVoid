@@ -1,0 +1,35 @@
+# Template file for 'heroic-games-launcher'
+pkgname=heroic-games-launcher
+version=2.22.3
+revision=1
+archs="x86_64"
+wrksrc="Heroic-${version}-linux-x64"
+nostrip=yes
+noverifyrdeps=yes
+depends="python3 gtk+3 nss alsa-lib libXScrnSaver libxkbfile libsecret
+ xdg-utils at-spi2-core libnotify libdrm"
+short_desc="Open source game launcher for GOG, Epic Games and Amazon Games"
+maintainer="Kurnias <adityakurnia@proton.me>"
+license="GPL-3.0-only"
+homepage="https://heroicgameslauncher.com"
+distfiles="https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/releases/download/v${version}/Heroic-${version}-linux-x64.tar.xz"
+checksum=7382d719a5114c5f0761eea05cdb22f73f58fe98ec840d16b3d85a054d0d3efd
+
+do_install() {
+	vmkdir usr/lib/heroic
+	cp -a . "${DESTDIR}/usr/lib/heroic/"
+
+	if [ -f "${DESTDIR}/usr/lib/heroic/chrome-sandbox" ]; then
+		chmod 4755 "${DESTDIR}/usr/lib/heroic/chrome-sandbox"
+	fi
+
+	vmkdir usr/bin
+	ln -sf ../lib/heroic/heroic "${DESTDIR}/usr/bin/heroic"
+
+	vinstall resources/app.asar.unpacked/build/icon.png 644 \
+		usr/share/icons/hicolor/1024x1024/apps heroic.png
+	vinstall "${FILESDIR}/heroic.desktop" 644 usr/share/applications
+
+	vlicense LICENSE.electron.txt
+	vlicense LICENSES.chromium.html
+}

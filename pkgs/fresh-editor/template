@@ -7,7 +7,7 @@ hostmakedepends="bsdtar"
 depends="hicolor-icon-theme desktop-file-utils"
 short_desc="Terminal-based text editor with a modern UI"
 maintainer="Kurnias <adityakurnia@proton.me>"
-license="GPL-3.0"
+license="GPL-3.0-only"
 homepage="https://github.com/sinelaw/fresh"
 
 distfiles="https://github.com/sinelaw/fresh/releases/download/v${version}/fresh-editor-${version}-x86_64.AppImage"
