@@ -1,6 +1,6 @@
 # Template file for 'osu-lazer'
 pkgname=osu!
-version=2026.921.0
+version=2026.1005.0
 revision=1
 archs="x86_64"
 create_wrksrc=yes
@@ -14,7 +14,7 @@ maintainer="Kurnias <adityakurnia@proton.me>"
 license="MIT, custom:CC-BY-NC-4.0"
 homepage="https://osu.ppy.sh"
 distfiles="https://github.com/ppy/osu/releases/download/${version}-lazer/osu.AppImage>osu-${version}.AppImage"
-checksum=dced9463b501009c95dbed891abd2f0acc2efb84ee4336f5b1cc3b7c04a5fc7d
+checksum=284108e65373a8339beeca40e2c14b1528c177bd6ce1eb21407639f8e508da2e
 
 do_extract() {
 	mkdir -p "${wrksrc}"

@@ -1,7 +1,7 @@
 # Template file for 'polymc'
 pkgname=polymc
-version=8.0
-revision=2
+version=8.1
+revision=1
 archs="x86_64"
 build_style=cmake
 configure_args="-DLauncher_QT_VERSION_MAJOR=6
@@ -21,7 +21,7 @@ maintainer="Kurnias <adityakurnia@proton.me>"
 license="GPL-3.0-only, Apache-2.0"
 homepage="https://polymc.org"
 distfiles="https://github.com/PolyMC/PolyMC/releases/download/${version}/PolyMC-${version}.tar.gz"
-checksum=90ec4c2f47b342aa29a2441f97363c0863ed1fbddc4b8ef9a65e07cb36410ec3
+checksum=217a80e1bc3412239b3a45e4fc45f3308388dd75d7a4aafdd0a75c12590ac7d3
 
 wrksrc="PolyMC-${version}"
 
