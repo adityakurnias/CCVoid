@@ -1,0 +1,51 @@
+# Template file for 'noctalia'
+pkgname=noctalia
+version=5.3.0
+revision=1
+archs="x86_64* aarch64*"
+build_style=meson
+configure_args="-Dtests=disabled -Dnative_optimizations=false"
+hostmakedepends="pkg-config wayland-devel"
+makedepends="wayland-devel wayland-protocols libglvnd-devel MesaLib-devel
+ libepoxy-devel freetype-devel fontconfig-devel cairo-devel pango-devel
+ harfbuzz-devel librsvg-devel libxkbcommon-devel glib-devel libsecret-devel
+ libsodium-devel sdbus-c++-devel pipewire-devel wireplumber-devel polkit-devel
+ pam-devel libqalculate-devel libxml2-devel libmd4c-devel
+ tomlplusplus-devel json-c++ stb libical-devel libwebp-devel libjxl-devel
+ libsndfile-devel libcurl-devel"
+depends="dbus pipewire wireplumber git sound-theme-freedesktop
+ hicolor-icon-theme desktop-file-utils"
+short_desc="A sleek, customizable desktop shell crafted for Wayland."
+maintainer="Kurnias <adityakurnia@proton.me>"
+license="MIT, Apache-2.0"
+homepage="https://github.com/noctalia-dev/noctalia"
+changelog="https://github.com/noctalia-dev/noctalia/releases"
+distfiles="https://github.com/noctalia-dev/noctalia/archive/v${version}.tar.gz"
+checksum=7677b5d7da80cf89c7a8232de26d25380aa5fcaf34fb38abddd4fe7cb676161a
+
+# jemalloc is glibc-only (upstream PACKAGING.md); musl must disable it.
+if [ "$XBPS_TARGET_LIBC" = "glibc" ]; then
+	makedepends+=" jemalloc-devel"
+else
+	configure_args+=" -Djemalloc=disabled"
+fi
+
+post_install() {
+	vlicense LICENSE
+	vlicense third_party/luau/LICENSE.txt LICENSE.luau
+	vlicense third_party/luau/lua_LICENSE.txt LICENSE.lua
+	vlicense third_party/fzy/LICENSE LICENSE.fzy
+	vlicense third_party/material_color_utilities/LICENSE LICENSE.material-color-utilities
+	vlicense third_party/wuffs/LICENSE-MIT LICENSE.wuffs-MIT
+	vlicense third_party/wuffs/LICENSE-APACHE LICENSE.wuffs-APACHE
+	vlicense assets/fonts/tabler-icons-license.txt LICENSE.tabler-icons
+
+	if [ -z "$CROSS_BUILD" ]; then
+		build/noctalia completions bash > noctalia.bash
+		build/noctalia completions zsh > noctalia.zsh
+		build/noctalia completions fish > noctalia.fish
+		vcompletion noctalia.bash bash noctalia
+		vcompletion noctalia.zsh zsh noctalia
+		vcompletion noctalia.fish fish noctalia
+	fi
+}
