@@ -19,7 +19,7 @@ depends="virtual?java-runtime qt6-svg qt6-imageformats qt6-wayland
  qt6-plugin-tls-openssl hicolor-icon-theme desktop-file-utils"
 short_desc="Open source Minecraft launcher with support for multiple instances"
 maintainer="Kurnias <adityakurnia@proton.me>"
-license="GPL-3.0-only, Apache-2.0"
+license="GPL-3.0"
 homepage="https://polymc.org"
 distfiles="https://github.com/PolyMC/PolyMC/releases/download/${version}/PolyMC-${version}.tar.gz"
 checksum=217a80e1bc3412239b3a45e4fc45f3308388dd75d7a4aafdd0a75c12590ac7d3

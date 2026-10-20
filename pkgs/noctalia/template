@@ -17,7 +17,7 @@ depends="dbus pipewire wireplumber git sound-theme-freedesktop
  hicolor-icon-theme desktop-file-utils"
 short_desc="A sleek, customizable desktop shell crafted for Wayland."
 maintainer="Kurnias <adityakurnia@proton.me>"
-license="MIT, Apache-2.0"
+license="MIT"
 homepage="https://github.com/noctalia-dev/noctalia"
 changelog="https://github.com/noctalia-dev/noctalia/releases"
 distfiles="https://github.com/noctalia-dev/noctalia/archive/v${version}.tar.gz"

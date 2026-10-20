@@ -9,7 +9,7 @@ depends="gtk+3 nss alsa-lib libXScrnSaver libxkbfile libsecret
  xdg-utils at-spi2-core libnotify libdrm"
 short_desc="Google Antigravity agentic IDE"
 maintainer="Kurnias <adityakurnia@proton.me>"
-license="custom:Proprietary"
+license="Proprietary"
 homepage="https://antigravity.google"
 restricted=yes
 nostrip=yes

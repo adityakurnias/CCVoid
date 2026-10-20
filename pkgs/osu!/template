@@ -11,7 +11,7 @@ depends="libstdc++ icu openssl libglvnd alsa-lib libpulseaudio
  libX11 libXext libxkbcommon wayland eudev-libudev libdrm"
 short_desc="Free-to-win rhythm game (osu!lazer)"
 maintainer="Kurnias <adityakurnia@proton.me>"
-license="MIT, custom:CC-BY-NC-4.0"
+license="MIT"
 homepage="https://osu.ppy.sh"
 distfiles="https://github.com/ppy/osu/releases/download/${version}-lazer/osu.AppImage>osu-${version}.AppImage"
 checksum=284108e65373a8339beeca40e2c14b1528c177bd6ce1eb21407639f8e508da2e

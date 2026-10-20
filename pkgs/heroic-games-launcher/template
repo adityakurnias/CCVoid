@@ -10,7 +10,7 @@ depends="python3 gtk+3 nss alsa-lib libXScrnSaver libxkbfile libsecret
  xdg-utils at-spi2-core libnotify libdrm"
 short_desc="Open source game launcher for GOG, Epic Games and Amazon Games"
 maintainer="Kurnias <adityakurnia@proton.me>"
-license="GPL-3.0-only"
+license="GPL-3.0"
 homepage="https://heroicgameslauncher.com"
 distfiles="https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/releases/download/v${version}/Heroic-${version}-linux-x64.tar.xz"
 checksum=7382d719a5114c5f0761eea05cdb22f73f58fe98ec840d16b3d85a054d0d3efd
