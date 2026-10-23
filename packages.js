@@ -73,7 +73,7 @@ const PACKAGES = [
   },
   {
     name: "zed-editor",
-    version: "1.23.2_1",
+    version: "1.25.2_1",
     arch: "x86_64",
     license: "GPL-3.0, Apache-2.0",
     homepage: "https://zed.dev",

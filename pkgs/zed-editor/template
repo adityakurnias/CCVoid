@@ -1,6 +1,6 @@
 # Template file for 'zed-editor'
 pkgname=zed-editor
-version=1.24.3
+version=1.25.2
 revision=1
 archs="x86_64"
 build_style=fetch
@@ -10,7 +10,7 @@ maintainer="Kurnias <adityakurnia@proton.me>"
 license="GPL-3.0, Apache-2.0"
 homepage="https://zed.dev"
 distfiles="https://github.com/zed-industries/zed/releases/download/v${version}/zed-linux-x86_64.tar.gz"
-checksum=0e94b9826cf72bef9e903e4b405b33e760fe317c73a6e9d31c7646f27a1bb60f
+checksum=b405ebea810c82ff84854631e7b2853ae1f22dd1b7e306cb57726471c6617508
 depends="wayland libxkbcommon vulkan-loader mesa libGL"
 nostrip=yes
 noshlibprovides=yes
