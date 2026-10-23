@@ -1,6 +1,6 @@
 # Template file for 'fresh-editor'
 pkgname=fresh-editor
-version=0.5.2
+version=0.5.4
 revision=2
 archs="x86_64"
 hostmakedepends="bsdtar"
@@ -11,7 +11,7 @@ license="GPL-3.0"
 homepage="https://getfresh.dev/"
 
 distfiles="https://github.com/sinelaw/fresh/releases/download/v${version}/fresh-editor-${version}-x86_64.AppImage"
-checksum=6c8fc58ec96e94988da936a1f9fe826c835958ff2ab7100592c92f91bb91c0ee
+checksum=1483a15aedba301d39697ae2917b1916da30ada0ade32035c8af7519b51b4a35
 
 nostrip=yes
 nopie=yes
@@ -19,20 +19,20 @@ noshlibprovides=yes
 
 do_extract() {
     mkdir -p "$wrksrc"
-    
+
     cp "${XBPS_SRCDISTDIR}/${pkgname}-${version}/${distfiles##*/}" "$wrksrc/fresh.AppImage"
     chmod +x "$wrksrc/fresh.AppImage"
-    
+
     cd "$wrksrc"
     ./fresh.AppImage --appimage-extract >/dev/null 2>&1
-    
+
     mv squashfs-root/* .
     rm -rf fresh.AppImage squashfs-root
 }
 
 do_install() {
     local appdir="usr/lib/fresh-editor"
-    
+
     vmkdir "${appdir}"
     vmkdir usr/bin
     vmkdir usr/share/applications
@@ -53,6 +53,6 @@ do_install() {
     if [ -d "${DESTDIR}/${appdir}/usr/share/icons" ]; then
         cp -a "${DESTDIR}/${appdir}/usr/share/icons/"* "${DESTDIR}/usr/share/icons/"
     fi
-    
+
     rm -rf "${DESTDIR}/${appdir}/usr/share"
 }
