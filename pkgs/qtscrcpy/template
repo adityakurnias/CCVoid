@@ -1,0 +1,73 @@
+# Template file for 'qtscrcpy'
+pkgname=qtscrcpy
+version=4.2.1
+revision=1
+# Upstream builds against its bundled static x86_64 FFmpeg 4.4.2 libs
+archs="x86_64"
+build_style=cmake
+# QtScrcpyCore is a git submodule, which is not part of the GitHub tag tarball
+_core_commit=9e388b8aa48e4e1c2cfdef408ef00c4c6b45c921
+wrksrc="QtScrcpy-${version}"
+skip_extraction="QtScrcpyCore-${_core_commit}.tar.gz"
+hostmakedepends="pkg-config qt6-tools"
+makedepends="qt6-base-devel qt6-base-private-devel qt6-multimedia-devel
+ libglvnd-devel libxcb-devel zlib-devel"
+depends="android-tools bash qt6-wayland hicolor-icon-theme desktop-file-utils"
+short_desc="Android screen mirroring and control, a Qt GUI for scrcpy"
+maintainer="Kurnias <adityakurnia@proton.me>"
+license="Apache-2.0"
+homepage="https://github.com/barry-ran/QtScrcpy"
+distfiles="https://github.com/barry-ran/QtScrcpy/archive/refs/tags/v${version}.tar.gz>QtScrcpy-${version}.tar.gz
+ https://github.com/barry-ran/QtScrcpyCore/archive/${_core_commit}.tar.gz>QtScrcpyCore-${_core_commit}.tar.gz"
+checksum="89d42e8d6d9f2d50036a244cd5b1a6169f733afdae0fc933230d4c47d8f72a60
+ 15b717353f1174b2f9528ec2b9be3caa326dbd24aac18904f00279a79f0c5e4b"
+
+post_extract() {
+	# Extract the submodule by hand into the path the top-level CMakeLists expects
+	rm -rf "${wrksrc}/QtScrcpy/QtScrcpyCore"
+	mkdir -p "${wrksrc}/QtScrcpy/QtScrcpyCore"
+	bsdtar -xzf "${XBPS_SRCDISTDIR}/${pkgname}-${version}/QtScrcpyCore-${_core_commit}.tar.gz" \
+		--strip-components=1 -C "${wrksrc}/QtScrcpy/QtScrcpyCore"
+}
+
+pre_configure() {
+	# Upstream builds with -Wall -Wextra -pedantic -Werror
+	find . -name CMakeLists.txt -exec sed -i 's/ -Werror//' {} +
+
+	# With recent Qt (Void has 6.11) GuiPrivate must be found explicitly, else the
+	# Qt6::GuiPrivate target is missing. Optional so older Qt (6.4) still works.
+	sed -i '/^find_package(Qt${QT_DESIRED_VERSION} REQUIRED COMPONENTS/a find_package(Qt${QT_DESIRED_VERSION} OPTIONAL_COMPONENTS GuiPrivate)' \
+		QtScrcpy/CMakeLists.txt
+}
+
+do_install() {
+	# Void configures cmake with CMAKE_BUILD_TYPE=None, and upstream writes its
+	# output to output/x64/<build type>/, so locate it instead of hardcoding.
+	local _out
+	_out="$(dirname "$(find "${wrksrc}/output" -name QtScrcpy -type f | head -n1)")"
+	[ -f "${_out}/QtScrcpy" ] || msg_error "qtscrcpy: build output not found\n"
+
+	# The app locates adb, scrcpy-server, sndcpy.sh and its default
+	# config/keymap relative to its own executable, so keep them together.
+	vmkdir usr/lib/qtscrcpy
+	vinstall "${_out}/QtScrcpy" 755 usr/lib/qtscrcpy
+	vinstall "${_out}/scrcpy-server" 644 usr/lib/qtscrcpy
+	vinstall "${_out}/sndcpy.sh" 755 usr/lib/qtscrcpy
+	vinstall "${_out}/sndcpy.apk" 644 usr/lib/qtscrcpy
+
+	vmkdir usr/lib/qtscrcpy/config
+	vinstall "${wrksrc}/config/config.ini" 644 usr/lib/qtscrcpy/config
+
+	vmkdir usr/lib/qtscrcpy/keymap
+	for f in "${wrksrc}"/keymap/*.json; do
+		vinstall "$f" 644 usr/lib/qtscrcpy/keymap
+	done
+
+	# Use Void's adb instead of the prebuilt binary shipped upstream
+	ln -sf /usr/bin/adb "${DESTDIR}/usr/lib/qtscrcpy/adb"
+
+	vinstall "${FILESDIR}/qtscrcpy.sh" 755 usr/bin qtscrcpy
+	vinstall "${FILESDIR}/qtscrcpy.desktop" 644 usr/share/applications
+	vinstall "${wrksrc}/QtScrcpy/res/image/tray/logo.png" 644 usr/share/pixmaps qtscrcpy.png
+	vlicense "${wrksrc}/LICENSE"
+}

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=QtScrcpy
+GenericName=Android Screen Mirroring
+Comment=Display and control your Android device
+Exec=qtscrcpy
+Icon=qtscrcpy
+Terminal=false
+Categories=Utility;
+Keywords=android;scrcpy;adb;mirror;
