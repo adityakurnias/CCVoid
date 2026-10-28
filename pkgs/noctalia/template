@@ -1,6 +1,6 @@
 # Template file for 'noctalia'
 pkgname=noctalia
-version=5.3.0
+version=5.4.0
 revision=1
 archs="x86_64* aarch64*"
 build_style=meson
@@ -20,8 +20,8 @@ maintainer="Kurnias <adityakurnia@proton.me>"
 license="MIT"
 homepage="https://github.com/noctalia-dev/noctalia"
 changelog="https://github.com/noctalia-dev/noctalia/releases"
-distfiles="https://github.com/noctalia-dev/noctalia/archive/v${version}.tar.gz"
-checksum=7677b5d7da80cf89c7a8232de26d25380aa5fcaf34fb38abddd4fe7cb676161a
+distfiles="https://github.com/noctalia-dev/noctalia/releases/download/v${version}/noctalia-latest.tar.gz"
+checksum=2e2c926a8f2f5d8495ef6cb08726de9712f5c9d5d6d203e47e29df07a128d267
 
 # jemalloc is glibc-only (upstream PACKAGING.md); musl must disable it.
 if [ "$XBPS_TARGET_LIBC" = "glibc" ]; then
