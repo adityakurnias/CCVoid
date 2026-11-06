@@ -1,0 +1,26 @@
+# Template file for 'nushell'
+pkgname=nushell
+version=0.116.1
+revision=1
+archs="x86_64"
+short_desc="Modern shell written in Rust"
+maintainer="Kurnias <adityakurnia@proton.me>"
+license="MIT"
+homepage="https://www.nushell.sh"
+changelog="https://github.com/nushell/nushell/releases"
+register_shell="/usr/bin/nu"
+distfiles="https://github.com/nushell/nushell/releases/download/${version}/nu-${version}-x86_64-unknown-linux-gnu.tar.gz>nu-${version}.tar.gz"
+checksum=d6d8ace4be491ed8abba4026e73b60c0470b4671d7039307e7d772282ef863da
+wrksrc="nushell"
+
+do_install() {
+    vbin nu
+    
+    for plugin in nu_plugin_*; do
+        if [ -f "$plugin" ]; then
+            vbin "$plugin"
+        fi
+    done
+
+    vlicense LICENSE
+}
