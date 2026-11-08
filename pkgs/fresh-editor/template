@@ -1,58 +1,27 @@
 # Template file for 'fresh-editor'
 pkgname=fresh-editor
-version=0.5.4
-revision=2
+version=0.5.8
+revision=1
 archs="x86_64"
-hostmakedepends="bsdtar"
-depends="hicolor-icon-theme desktop-file-utils"
+wrksrc="fresh-editor-x86_64-unknown-linux-gnu"
+depends="hicolor-icon-theme"
 short_desc="Terminal-based text editor with a modern UI"
 maintainer="Kurnias <adityakurnia@proton.me>"
-license="GPL-3.0"
+license="GPL-3.0-or-later"
 homepage="https://getfresh.dev/"
-
-distfiles="https://github.com/sinelaw/fresh/releases/download/v${version}/fresh-editor-${version}-x86_64.AppImage"
-checksum=1483a15aedba301d39697ae2917b1916da30ada0ade32035c8af7519b51b4a35
-
-nostrip=yes
-nopie=yes
-noshlibprovides=yes
-
-do_extract() {
-    mkdir -p "$wrksrc"
-
-    cp "${XBPS_SRCDISTDIR}/${pkgname}-${version}/${distfiles##*/}" "$wrksrc/fresh.AppImage"
-    chmod +x "$wrksrc/fresh.AppImage"
-
-    cd "$wrksrc"
-    ./fresh.AppImage --appimage-extract >/dev/null 2>&1
-
-    mv squashfs-root/* .
-    rm -rf fresh.AppImage squashfs-root
-}
+distfiles="https://github.com/sinelaw/fresh/releases/download/v${version}/fresh-editor-x86_64-unknown-linux-gnu.tar.xz"
+checksum=182787fe491b52a9a145ce25c934c654233b498665f100de44275a1ce98d45da
 
 do_install() {
-    local appdir="usr/lib/fresh-editor"
+	vbin fresh
+	vinstall fresh.desktop 644 usr/share/applications
 
-    vmkdir "${appdir}"
-    vmkdir usr/bin
-    vmkdir usr/share/applications
-    vmkdir usr/share/icons/hicolor/256x256/apps
+	local size
+	for size in 16x16 22x22 24x24 32x32 48x48 64x64 128x128 256x256 512x512; do
+		vinstall "icons/${size}/apps/fresh.png" 644 \
+			"usr/share/icons/hicolor/${size}/apps"
+	done
 
-    cp -a "$wrksrc/"* "${DESTDIR}/${appdir}/"
-
-    if [ -f "${DESTDIR}/${appdir}/usr/bin/fresh" ]; then
-        ln -sfr "${DESTDIR}/${appdir}/usr/bin/fresh" "${DESTDIR}/usr/bin/fresh"
-    fi
-
-    if ls "${DESTDIR}/${appdir}/usr/share/applications/"*.desktop 1> /dev/null 2>&1; then
-        cp "${DESTDIR}/${appdir}/usr/share/applications/"*.desktop "${DESTDIR}/usr/share/applications/fresh-editor.desktop"
-        sed -i 's|Exec=.*|Exec=fresh %F|g' "${DESTDIR}/usr/share/applications/fresh-editor.desktop"
-        sed -i 's|Icon=.*|Icon=fresh|g' "${DESTDIR}/usr/share/applications/fresh-editor.desktop"
-    fi
-
-    if [ -d "${DESTDIR}/${appdir}/usr/share/icons" ]; then
-        cp -a "${DESTDIR}/${appdir}/usr/share/icons/"* "${DESTDIR}/usr/share/icons/"
-    fi
-
-    rm -rf "${DESTDIR}/${appdir}/usr/share"
+	vlicense LICENSE
+	vdoc README.md
 }
