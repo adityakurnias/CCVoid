@@ -1,6 +1,6 @@
 # Template file for 'heroic-games-launcher'
 pkgname=heroic-games-launcher
-version=2.22.3
+version=2.22.4
 revision=1
 archs="x86_64"
 wrksrc="Heroic-${version}-linux-x64"
@@ -13,7 +13,7 @@ maintainer="Kurnias <adityakurnia@proton.me>"
 license="GPL-3.0"
 homepage="https://heroicgameslauncher.com"
 distfiles="https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/releases/download/v${version}/Heroic-${version}-linux-x64.tar.xz"
-checksum=7382d719a5114c5f0761eea05cdb22f73f58fe98ec840d16b3d85a054d0d3efd
+checksum=81497c4e67d42905da5839a32be053c011eae35fb1fd5ec9441249b238d8f99b
 
 do_install() {
 	vmkdir usr/lib/heroic
