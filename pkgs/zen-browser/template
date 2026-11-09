@@ -1,7 +1,7 @@
 # Template file for 'zen-browser'
 pkgname=zen-browser
-version=1.24b
-revision=2
+version=1.24.1b
+revision=1
 archs="x86_64"
 wrksrc="zen"
 depends="gtk+3 dbus alsa-lib libXcomposite libXcursor libXdamage libXrandr
@@ -12,7 +12,7 @@ maintainer="Kurnias <adityakurnia@proton.me>"
 license="MPL-2.0"
 homepage="https://zen-browser.app"
 distfiles="https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz>zen-${version}.tar.xz"
-checksum=323f2682e73e38247a51fbcc75e5628ed2bb9b404db00cf9cf16af329a916fae
+checksum=c592a31fe8faa5ddfe91d6243b50c3107e1831c1247539fe03cc04f0fd5cb9cd
 nostrip=yes
 noverifyrdeps=yes
 
