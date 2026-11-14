@@ -31,12 +31,14 @@ EOF
 }
 
 BOOTSTRAP=0
+RESUME=0
 PKG_TO_BUILD=
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
         -b|--bootstrap)   BOOTSTRAP=1 ;;
         -B|--rebootstrap) BOOTSTRAP=2 ;;
+        -r|--resume)      RESUME=1 ;;
         -h|--help)        usage; exit 0 ;;
         -*)               usage >&2; error "Unknown option: $1" ;;  
         *)
@@ -50,6 +52,10 @@ done
 if [ -z "$PKG_TO_BUILD" ] && [ "$BOOTSTRAP" -eq 0 ]; then
     usage >&2
     exit 1
+fi
+
+if [ "$RESUME" -eq 1 ] && [ "$BOOTSTRAP" -eq 2 ]; then
+    error "--resume cannot be combined with --rebootstrap (zap removes the build state)"
 fi
 
 # 1. Setup void-packages (Sparse checkout to save disk space)
@@ -108,8 +114,13 @@ rm -rf "$DEST"
 cp -r "$PKGS_DIR/$PKG_TO_BUILD" "$DEST"
 
 # 4. Build the package
-info "Cleaning previous build state..."
-"$VOID_PACKAGES/xbps-src" clean "$PKG_TO_BUILD"
+if [ "$RESUME" -eq 1 ]; then
+    info "Resume mode: keeping previous build state (skipping clean)..."
+    [ -d "$MASTERDIR/builddir" ] || info "Warning: no builddir found, build will start from scratch"
+else
+    info "Cleaning previous build state..."
+    "$VOID_PACKAGES/xbps-src" clean "$PKG_TO_BUILD"
+fi
 
 info "Removing old built versions of '$PKG_TO_BUILD' from hostdir..."
 find "$VOID_PACKAGES/hostdir/binpkgs" -maxdepth 1 \
