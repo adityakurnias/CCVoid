@@ -1,6 +1,6 @@
 # Template file for 'noctalia'
 pkgname=noctalia
-version=5.4.0
+version=5.5.0
 revision=1
 archs="x86_64* aarch64*"
 build_style=meson
@@ -21,7 +21,7 @@ license="MIT"
 homepage="https://github.com/noctalia-dev/noctalia"
 changelog="https://github.com/noctalia-dev/noctalia/releases"
 distfiles="https://github.com/noctalia-dev/noctalia/releases/download/v${version}/noctalia-latest.tar.gz"
-checksum=2e2c926a8f2f5d8495ef6cb08726de9712f5c9d5d6d203e47e29df07a128d267
+checksum=a4ba61392de6024905513d6b070cf40839809f61953468bda7eb8272f7a7aa16
 
 # jemalloc is glibc-only (upstream PACKAGING.md); musl must disable it.
 if [ "$XBPS_TARGET_LIBC" = "glibc" ]; then
@@ -36,9 +36,9 @@ post_install() {
 	vlicense third_party/luau/lua_LICENSE.txt LICENSE.lua
 	vlicense third_party/fzy/LICENSE LICENSE.fzy
 	vlicense third_party/material_color_utilities/LICENSE LICENSE.material-color-utilities
-	vlicense third_party/wuffs/LICENSE-MIT LICENSE.wuffs-MIT
-	vlicense third_party/wuffs/LICENSE-APACHE LICENSE.wuffs-APACHE
-	vlicense assets/fonts/tabler-icons-license.txt LICENSE.tabler-icons
+	vlicense lib/third_party/wuffs/LICENSE-MIT LICENSE.wuffs-MIT
+	vlicense lib/third_party/wuffs/LICENSE-APACHE LICENSE.wuffs-APACHE
+	vlicense lib/assets/fonts/tabler-icons-license.txt LICENSE.tabler-icons
 
 	if [ -z "$CROSS_BUILD" ]; then
 		build/noctalia completions bash > noctalia.bash
