@@ -1,6 +1,6 @@
 # Template file for 'zed-editor'
 pkgname=zed-editor
-version=1.28.1
+version=1.29.3
 short_desc="High-performance, multiplayer code editor."
 revision=1
 archs="x86_64"
@@ -11,7 +11,7 @@ maintainer="Kurnias <adityakurnia@proton.me>"
 license="GPL-3.0, Apache-2.0"
 homepage="https://zed.dev"
 distfiles="https://github.com/zed-industries/zed/releases/download/v${version}/zed-linux-x86_64.tar.gz"
-checksum=9c3fc4cbe533e72c8d0e864a62be2b88d69cc44b9f52cd25d4c21d054dda3742
+checksum=44b0f350aa7bf4551d1b0aaa2d3b673a6de2c03bc5e979b3592fd2180b4f77c1
 nostrip=yes
 noshlibprovides=yes
 nopie=yes
